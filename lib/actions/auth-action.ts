@@ -2,12 +2,19 @@
 import { login, register } from "@/lib/api/auth";
 import { RegisterFormData } from "@/app/(auth)/_components/schema";
 import { LoginFormData } from "@/app/(auth)/_components/schema";
-import { setTokenCookie, storeUserData } from "../cookies";
+import { setTokenCookie, storeUserData, getTokenCookie, getUserData, clearAuthCookies } from "../cookies";
 
 export const handleRegisterUser = async (data: RegisterFormData) => {
     try {
-        // how to handle data from component and how to send to component
-        const result = await register(data);
+        // Map firstName and lastName to fullName for the backend API payload
+        const payload = {
+            fullName: `${data.firstName} ${data.lastName}`,
+            username: data.username,
+            email: data.email,
+            password: data.password,
+        };
+
+        const result = await register(payload);
 
         if (result.success) {
             return { success: true, message: result.message, data: result.data };
@@ -37,5 +44,33 @@ export const handleLoginUser = async (data: LoginFormData) => {
         }
     } catch (error: Error | any) {
         return { success: false, message: error?.message || 'Login failed' };
+    }
+};
+
+export const getSessionData = async () => {
+    try {
+        const token = await getTokenCookie();
+        const user = await getUserData();
+        return { token: token || null, user: user || null };
+    } catch (error) {
+        return { token: null, user: null };
+    }
+};
+
+export const handleUpdateUserCookie = async (user: any) => {
+    try {
+        await storeUserData(user);
+        return { success: true };
+    } catch (error: any) {
+        return { success: false, message: error?.message || "Failed to update cookie" };
+    }
+};
+
+export const handleLogoutUser = async () => {
+    try {
+        await clearAuthCookies();
+        return { success: true };
+    } catch (error: any) {
+        return { success: false, message: error?.message || "Logout failed" };
     }
 };

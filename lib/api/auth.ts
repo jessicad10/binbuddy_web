@@ -26,3 +26,30 @@ export const login = async (data: any) => {
         //error?.response?.dataa -> response ko body
     }
 }
+
+export const whoami = async (token: string) => {
+    try {
+        const response = await axiosInstance.get(API.AUTH.WHOAMI, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        return response.data;
+    } catch(error: any) {
+        throw new Error(error?.response?.data?.message || 'Failed to fetch user details');
+    }
+}
+
+export const updateProfile = async (formData: FormData, token: string) => {
+    try {
+        const response = await axiosInstance.patch(API.AUTH.UPDATE, formData, {
+            headers: {
+                "Content-Type": "multipart/form-data",
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        return response.data;
+    } catch(error: any) {
+        throw new Error(error?.response?.data?.message || 'Profile update failed');
+    }
+}

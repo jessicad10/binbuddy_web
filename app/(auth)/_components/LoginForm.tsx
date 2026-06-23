@@ -8,10 +8,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { LoginFormData, loginSchema } from "./schema";
 import { handleLoginUser } from "@/lib/actions/auth-action";
+import { useAuth } from "@/app/context/AuthContext";
 
 export default function LoginForm() {
   const [error, setError] = useState("");
   const [isPending, startTransition] = useTransition();
+  const { login } = useAuth();
 
   const router = useRouter();
 
@@ -31,6 +33,9 @@ export default function LoginForm() {
         const result = await handleLoginUser(data);
 
         if (result.success) {
+          if (result.data?.user && result.data?.token) {
+            await login(result.data.user, result.data.token);
+          }
           router.push("/dashboard");
         } else {
           setError(result.message || "Login failed");
@@ -53,7 +58,7 @@ export default function LoginForm() {
             waste <span className="text-green-400">a reality.</span>
           </h1>
 
-          <p className="mt-6 text-gray-300 text-lg leading-relaxed">
+          <p className="mt-6 text-black-300 text-lg leading-relaxed">
             Join thousands of households turning everyday scraps into
             sustainable impact through intelligent tracking.
           </p>
@@ -95,7 +100,7 @@ export default function LoginForm() {
             )}
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-black-700 mb-2">
                 Email address
               </label>
 
