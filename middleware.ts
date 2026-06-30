@@ -19,6 +19,31 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(loginUrl);
   }
 
+  // Protect admin routes
+  if (pathname.startsWith("/admin")) {
+    if (!token) {
+      const loginUrl = new URL("/login", request.url);
+      loginUrl.searchParams.set("redirect", pathname);
+      return NextResponse.redirect(loginUrl);
+    }
+    try {
+      const userDataCookie = request.cookies.get("user_data")?.value;
+      let user = null;
+      if (userDataCookie) {
+        try {
+          user = JSON.parse(userDataCookie);
+        } catch {
+          user = JSON.parse(decodeURIComponent(userDataCookie));
+        }
+      }
+      if (!user || user.role !== "admin") {
+        return NextResponse.redirect(new URL("/dashboard", request.url));
+      }
+    } catch (e) {
+      return NextResponse.redirect(new URL("/dashboard", request.url));
+    }
+  }
+
   // If trying to access login/register and already logged in, redirect to dashboard
   if (isPublicRoute && token) {
     return NextResponse.redirect(new URL("/dashboard", request.url));
