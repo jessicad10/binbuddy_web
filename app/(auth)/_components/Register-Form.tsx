@@ -5,6 +5,7 @@ import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Eye, EyeOff } from "lucide-react";
 
 import {
   registerSchema,
@@ -16,6 +17,8 @@ import { handleRegisterUser } from "@/lib/actions/auth-action";
 export default function RegisterForm() {
   const [error, setError] = useState("");
   const [isPending, startTransition] = useTransition();
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const router = useRouter();
 
@@ -190,12 +193,22 @@ export default function RegisterForm() {
                 Password
               </label>
 
-              <input
-                type="password"
-                placeholder="••••••••"
-                {...register("password")}
-                className="w-full px-4 py-3 rounded-xl border border-gray-300 bg-white text-black placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-green-600"
-              />
+              <div className="relative">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  placeholder="••••••••"
+                  {...register("password")}
+                  className="w-full px-4 pr-12 py-3 rounded-xl border border-gray-300 bg-white text-black placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-green-600"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-green-700 transition cursor-pointer"
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                >
+                  {showPassword ? <Eye size={18} /> : <EyeOff size={18} />}
+                </button>
+              </div>
 
               {errors.password && (
                 <p className="text-red-500 text-sm mt-1">
@@ -210,12 +223,22 @@ export default function RegisterForm() {
                 Confirm Password
               </label>
 
-              <input
-                type="password"
-                placeholder="••••••••"
-                {...register("confirmPassword")}
-                className="w-full px-4 py-3 rounded-xl border border-gray-300 bg-white text-black placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-green-600"
-              />
+              <div className="relative">
+                <input
+                  type={showConfirmPassword ? "text" : "password"}
+                  placeholder="••••••••"
+                  {...register("confirmPassword")}
+                  className="w-full px-4 pr-12 py-3 rounded-xl border border-gray-300 bg-white text-black placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-green-600"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  className="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-green-700 transition cursor-pointer"
+                  aria-label={showConfirmPassword ? "Hide password" : "Show password"}
+                >
+                  {showConfirmPassword ? <Eye size={18} /> : <EyeOff size={18} />}
+                </button>
+              </div>
 
               {errors.confirmPassword && (
                 <p className="text-red-500 text-sm mt-1">
