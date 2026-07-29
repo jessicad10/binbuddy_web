@@ -5,6 +5,8 @@ import { useAuth } from "@/app/context/AuthContext";
 import { updateProfile } from "@/lib/api/auth";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import Header from "@/app/(auth)/_components/Header";
+import Footer from "@/app/(auth)/_components/Footer";
 import { ArrowLeft, Camera, Save, Lock, User, Mail, Phone, RefreshCw } from "lucide-react";
 
 export default function ProfilePage() {
@@ -158,8 +160,9 @@ export default function ProfilePage() {
   }
 
   return (
-    <main className="min-h-screen bg-[#F3F0DE] py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-4xl mx-auto">
+    <main className="min-h-screen bg-[#F3F0DE] font-sans flex flex-col">
+      <Header />
+      <div className="flex-grow max-w-4xl w-full mx-auto py-12 px-4 sm:px-6 lg:px-8">
         {/* Back Link */}
         <div className="mb-6">
           <Link
@@ -408,6 +411,7 @@ export default function ProfilePage() {
           </div>
         </div>
       </div>
+      <Footer />
     </main>
   );
 }
