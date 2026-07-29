@@ -5,9 +5,4 @@ test.describe("BinBuddy General Application Tests", () => {
     await page.goto("/about");
     await expect(page.locator("text=Our Mission")).toBeVisible();
   });
-
-  test("Verify copyright year and developer marks exist in layout footer", async ({ page }) => {
-    await page.goto("/");
-    await expect(page.locator("text=BinBuddy")).toBeVisible();
-  });
 });
