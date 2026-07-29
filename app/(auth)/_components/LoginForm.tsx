@@ -5,6 +5,7 @@ import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Eye, EyeOff } from "lucide-react";
 
 import { LoginFormData, loginSchema } from "./schema";
 import { handleLoginUser } from "@/lib/actions/auth-action";
@@ -14,6 +15,7 @@ export default function LoginForm() {
   const [error, setError] = useState("");
   const [isPending, startTransition] = useTransition();
   const { login } = useAuth();
+  const [showPassword, setShowPassword] = useState(false);
 
   const router = useRouter();
 
@@ -100,7 +102,7 @@ export default function LoginForm() {
             )}
 
             <div>
-              <label className="block text-sm font-medium text-black-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
                 Email address
               </label>
 
@@ -124,20 +126,30 @@ export default function LoginForm() {
                   Password
                 </label>
 
-                <button
-                  type="button"
-                  className="text-sm text-green-600 hover:underline"
+                <Link
+                  href="/forget-password"
+                  className="text-sm text-green-600 hover:underline cursor-pointer"
                 >
                   Forgot password?
-                </button>
+                </Link>
               </div>
 
-              <input
-                type="password"
-                placeholder="••••••"
-                {...register("password")}
-                className="w-full rounded-lg border border-gray-200 px-4 py-3 outline-none focus:ring-2 focus:ring-green-500 text-black"
-              />
+              <div className="relative">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  placeholder="••••••"
+                  {...register("password")}
+                  className="w-full rounded-lg border border-gray-200 pl-4 pr-12 py-3 outline-none focus:ring-2 focus:ring-green-500 text-black"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-green-700 transition cursor-pointer"
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                >
+                  {showPassword ? <Eye size={18} /> : <EyeOff size={18} />}
+                </button>
+              </div>
 
               {errors.password && (
                 <p className="text-red-500 text-sm mt-1">
@@ -160,7 +172,7 @@ export default function LoginForm() {
             >
               {isPending
                 ? "Signing in..."
-                : "Sign in to Dashboard →"}
+                : "Sign in to Dashboard"}
             </button>
           </form>
 
