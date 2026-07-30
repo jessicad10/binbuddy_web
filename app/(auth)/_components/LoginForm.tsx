@@ -94,7 +94,7 @@ export default function LoginForm() {
             Log in to manage your sustainable impact.
           </p>
 
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-5" noValidate>
             {error && (
               <div className="text-red-500 border border-red-500 p-3 rounded-lg">
                 {error}
